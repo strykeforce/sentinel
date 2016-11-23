@@ -1,0 +1,7 @@
+-Wno-pragma-once-outside-header
+-I/opt/wpilib/include
+-I/Users/jeff/sf/sidewinder/src
+-Ivendor/include
+-Isrc
+-Ibuild/src
+-Ibuild/vendor/tools/generate_version
