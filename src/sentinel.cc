@@ -1,34 +1,32 @@
-#include "sentinel.h"
-
-#include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
 
 #include "WPILib.h"
-#include "catch/catch.hpp"
-#include "spdlog/spdlog.h"
 
-using namespace sentinel;
+#include "board_tests.h"
+#include "test.h"
 
-Sentinel::Sentinel() {
-  auto t = std::time(nullptr);
-  char mbstr[100];
-  std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d-%H-%M-%S", std::localtime(&t));
-  std::ostringstream oss;
-  oss << mbstr << "_sentinel_log.txt";
-  logger_ = spdlog::basic_logger_mt("sentinel", oss.str());
-}
+namespace sentinel {
+namespace robot {
+class Sentinel : public ::SampleRobot {
+ private:
+  /* data */
 
-void Sentinel::RobotInit() {
-  Catch::ConfigData config;
-  config.showSuccessfulTests = true;
-  session_.useConfigData(config);
-}
-void Sentinel::Disabled() {
-  std::cout << "Disable to reset, Enable to run tests.\n" << std::endl;
-  logger_->flush();
-}
-void Sentinel::OperatorControl() { session_.run(); }
+ public:
+  Sentinel() {}
 
-START_ROBOT_CLASS(Sentinel)
+  void RobotInit() {}
+
+  void Disabled() {}
+
+  void OperatorControl() {
+    sentinel::Test test;
+    BoardTests uut;
+    uut.TestPotentiometerFail(test);
+    uut.TestPotentiometerPass(test);
+    test.Log();
+  }
+};
+
+} /* robot */
+} /* sentinel */
+
+START_ROBOT_CLASS(sentinel::robot::Sentinel)

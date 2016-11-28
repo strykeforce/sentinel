@@ -1,6 +1,7 @@
 add_executable(sentinel
   sentinel.cc
   test.cc
+  board_tests.cc
 )
 
 target_link_libraries(sentinel
