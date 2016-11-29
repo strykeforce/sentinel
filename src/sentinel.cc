@@ -19,9 +19,7 @@ class Sentinel : public ::SampleRobot {
 
   void OperatorControl() {
     sentinel::Test test;
-    BoardTests uut;
-    uut.TestPotentiometerFail(test);
-    uut.TestPotentiometerPass(test);
+    sentinel::RunTests(test);
     test.Log();
   }
 };

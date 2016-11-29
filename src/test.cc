@@ -32,31 +32,29 @@ void Test::Log() {
 }
 
 namespace {
-void LogResults(json& tr, std::string name, double actual, double expected,
-                double epsilon) {
-  tr["test"] = name;
-  tr["actual"] = actual;
-  tr["expected"] = expected;
-  tr["epsilon"] = epsilon;
+void LogResults(json& tr, const TestCase& tc) {
+  tr["test"] = tc.name;
+  tr["actual"] = tc.actual;
+  tr["expected"] = tc.expected;
+  tr["epsilon"] = tc.epsilon;
 }
 }
 
-void Test::Pass(std::string msg, double actual, double expected,
-                double epsilon) {
-  cout << msg << ": PASSED" << endl;
+void Test::Pass(const TestCase& tc) {
+  cout << tc.name << ": PASSED" << endl;
   json tr;
   tr["passed"] = true;
-  LogResults(tr, msg, actual, expected, epsilon);
+  LogResults(tr, tc);
   j_["results"].push_back(tr);
 }
 
-void Test::Fail(std::string msg, double actual, double expected,
-                double epsilon) {
-  cout << msg << ": FAILED, actual = " << actual << ", expected = " << expected
-       << ", epsilon = " << epsilon << endl;
+void Test::Fail(const TestCase& tc) {
+  cout << tc.name << ": FAILED, actual = " << tc.actual
+       << ", expected = " << tc.expected << ", epsilon = " << tc.epsilon
+       << endl;
   success_ = false;
   json tr;
   tr["passed"] = false;
-  LogResults(tr, msg, actual, expected, epsilon);
+  LogResults(tr, tc);
   j_["results"].push_back(tr);
 }

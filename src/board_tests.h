@@ -4,15 +4,6 @@
 
 namespace sentinel {
 
-class BoardTests {
- private:
-  /* data */
+void RunTests(Test& test);
 
- public:
-  BoardTests();
-  virtual ~BoardTests() = default;
-
-  void TestPotentiometerFail(Test& test);
-  void TestPotentiometerPass(Test& test);
-};
 } /* sentinel */

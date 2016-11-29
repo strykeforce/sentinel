@@ -7,14 +7,20 @@
 
 namespace sentinel {
 
+struct TestCase {
+  std::string name;
+  uint32_t channel;
+  double actual, expected, epsilon;
+};
+
 /** Logs test results.
  */
 class Test {
  public:
   Test();
   virtual ~Test() = default;
-  void Pass(std::string msg, double actual, double expected, double epsilon);
-  void Fail(std::string msg, double actual, double expected, double epsilon);
+  void Pass(const TestCase& tc);
+  void Fail(const TestCase& tc);
   void Log();
 
  private:
