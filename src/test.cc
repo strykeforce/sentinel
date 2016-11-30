@@ -15,7 +15,7 @@ Test::Test() : out_("sentinel.json", ios_base::app | ios_base::out) {
   time_t now;
   time(&now);
   char buf[100];
-  strftime(buf, sizeof buf, "%FT%TZ", gmtime(&now));
+  strftime(buf, sizeof buf, "%FT%T%Z", localtime(&now));
 
   j_["timestamp"] = buf;
   j_["results"] = json::array();
