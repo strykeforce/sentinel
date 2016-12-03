@@ -25,10 +25,10 @@ void Test::Log() {
   j_["passed"] = success_;
   out_ << j_.dump(4) << endl;
   if (success_) {
-    cout << "Board PASSED" << endl;
+    cout << "Board PASSED\n\n" << endl;
     return;
   }
-  cout << "Board FAILED" << endl;
+  cout << "Board FAILED\n\n" << endl;
 }
 
 namespace {

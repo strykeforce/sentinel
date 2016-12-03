@@ -6,6 +6,7 @@ add_executable(sentinel
 
 target_link_libraries(sentinel
   PUBLIC
+  sidewinder
   wpi
 )
 

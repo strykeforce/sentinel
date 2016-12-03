@@ -1,0 +1,58 @@
+[SENTINEL]
+# talon frame update rate
+frame_rate = 10 # ms
+# wait for talon data frame refresh
+talon_wait_duration = 50 # ms
+
+# UUT supply current draw
+5v_name = "5vCurrent"
+3v_name = "3vCurrent"
+current_epsilon = 0.2
+
+# UUT analog encoder input
+analog_low_name = "AnalogEncoderInput:Low"
+analog_low = 95
+
+analog_med_low_name = "AnalogEncoderInput:MedLow"
+analog_med_low = 148
+
+analog_med_high_name = "AnalogEncoderInput:MedHigh"
+analog_med_high = 604
+
+analog_high_name = "AnalogEncoderInput:High"
+analog_high = 828
+
+analog_epsilon = 5
+
+# no led
+# analog_5v_current = 1.35
+# analog_3v_current = 2.55
+
+# UUT quad encoder logic levels
+quad_logic_a_name = "QuadEncoderLogicA"
+quad_logic_b_name = "QuadEncoderLogicB"
+quad_logic_i_name = "QuadEncoderLogicI"
+
+quad_5v_current = 1.35
+quad_3v_current = 2.55
+
+# UUT quad encoder counts
+quad_count_name = "QuadEncoderCount"
+quad_count_run_voltage = 12.0
+quad_count_epsilon = 20
+
+# UUT limit switches
+limit_name = "LimitSwitch"
+limit_5v_current = 1.35
+limit_3v_current = 2.55
+
+[[SENTINEL.TALON]]
+name = "both"
+type = "voltage"
+feedback_device = 0 # quad
+neutral_mode    = 1 # brake
+limit_mode      = 0 # use switches
+encoder_reversed = false
+output_reversed  = false
+
+voltage_ramp_rate = 0.0 # v/s, 0 disables

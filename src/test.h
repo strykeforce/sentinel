@@ -18,7 +18,10 @@ struct TestCase {
 class Test {
  public:
   Test();
+  Test(const Test&) = delete;
+  Test& operator=(const Test&) = delete;
   virtual ~Test() = default;
+
   void Pass(const TestCase& tc);
   void Fail(const TestCase& tc);
   void Log();
