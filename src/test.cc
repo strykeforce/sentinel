@@ -18,7 +18,7 @@ Test::Test() : out_("sentinel.json", ios_base::app | ios_base::out) {
   strftime(buf, sizeof buf, "%FT%T%Z", localtime(&now));
 
   j_["timestamp"] = buf;
-  j_["results"] = json::array();
+  j_["results"] = json::object();
 }
 
 void Test::Log() {
@@ -31,21 +31,17 @@ void Test::Log() {
   cout << "Board FAILED\n\n" << endl;
 }
 
-namespace {
-void LogResults(json& tr, const TestCase& tc) {
-  tr["test"] = tc.name;
-  tr["actual"] = tc.actual;
-  tr["expected"] = tc.expected;
-  tr["epsilon"] = tc.epsilon;
-}
+void Test::LogResults(const TestCase& tc) {
+  j_["results"][tc.name]["actual"] = tc.actual;
+  j_["results"][tc.name]["expected"] = tc.expected;
+  j_["results"][tc.name]["epsilon"] = tc.epsilon;
 }
 
 void Test::Pass(const TestCase& tc) {
   cout << tc.name << ": PASSED" << endl;
   json tr;
   tr["passed"] = true;
-  LogResults(tr, tc);
-  j_["results"].push_back(tr);
+  LogResults(tc);
 }
 
 void Test::Fail(const TestCase& tc) {
@@ -55,6 +51,5 @@ void Test::Fail(const TestCase& tc) {
   success_ = false;
   json tr;
   tr["passed"] = false;
-  LogResults(tr, tc);
-  j_["results"].push_back(tr);
+  LogResults(tc);
 }

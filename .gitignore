@@ -1,6 +1,8 @@
 /build
 /.vagrant
 /.vault_pw
+/sentinel.json
+
 # Created by https://www.gitignore.io/api/osx,c++,cmake
 
 ### OSX ###

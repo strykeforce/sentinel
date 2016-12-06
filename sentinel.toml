@@ -10,16 +10,16 @@ talon_wait_duration = 50 # ms
 current_epsilon = 0.2
 
 # UUT analog encoder input
-analog_low_name = "AnalogEncoderInput:Low"
+analog_low_name = "AnalogEncoderInputLow"
 analog_low = 95
 
-analog_med_low_name = "AnalogEncoderInput:MedLow"
+analog_med_low_name = "AnalogEncoderInputMedLow"
 analog_med_low = 148
 
-analog_med_high_name = "AnalogEncoderInput:MedHigh"
+analog_med_high_name = "AnalogEncoderInputMedHigh"
 analog_med_high = 604
 
-analog_high_name = "AnalogEncoderInput:High"
+analog_high_name = "AnalogEncoderInputHigh"
 analog_high = 828
 
 analog_epsilon = 5

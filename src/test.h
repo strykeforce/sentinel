@@ -30,5 +30,6 @@ class Test {
   nlohmann::json j_;
   std::fstream out_;
   bool success_ = true;
+  void LogResults(const TestCase& tc);
 };
 } /* sentinel */

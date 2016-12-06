@@ -85,7 +85,7 @@ void BoardTests::RunTests() {
 void BoardTests::TestCurrent(string name, double i5, double i3) {
   TestCase tc;
   auto name_suffix = config_->get_as<string>("5v_name").value_or("NA");
-  tc.name = name + ":" + name_suffix;
+  tc.name = name + name_suffix;
   tc.actual = static_cast<double>(current_5v_.GetVoltage());
   tc.expected = i5;
   tc.epsilon = config_->get_as<double>("current_epsilon").value_or(0.0);
@@ -97,7 +97,7 @@ void BoardTests::TestCurrent(string name, double i5, double i3) {
   }
 
   name_suffix = config_->get_as<string>("3v_name").value_or("NA");
-  tc.name = name + ":" + name_suffix;
+  tc.name = name + name_suffix;
   tc.actual = static_cast<double>(current_3v_.GetVoltage());
   tc.expected = i3;
 
@@ -173,7 +173,7 @@ void BoardTests::TestQuadEncoderLogic() {
       case 0:
         // A low
         name = config_->get_as<string>("quad_logic_a_name").value_or("NA");
-        tc.name = name + ":Low";
+        tc.name = name + "Low";
         digital_outputs_[kDIOQuadAHiLow]->Set(0);
         this_thread::sleep_for(talon_wait_);
         tc.actual =
@@ -184,7 +184,7 @@ void BoardTests::TestQuadEncoderLogic() {
       case 1:
         // A high
         name = config_->get_as<string>("quad_logic_a_name").value_or("NA");
-        tc.name = name + ":High";
+        tc.name = name + "High";
         digital_outputs_[kDIOQuadAHiLow]->Set(1);
         this_thread::sleep_for(talon_wait_);
         tc.actual =
@@ -194,7 +194,7 @@ void BoardTests::TestQuadEncoderLogic() {
       case 2:
         // B low
         name = config_->get_as<string>("quad_logic_b_name").value_or("NA");
-        tc.name = name + ":Low";
+        tc.name = name + "Low";
         digital_outputs_[kDIOQuadBHiLow]->Set(0);
         this_thread::sleep_for(talon_wait_);
         tc.actual =
@@ -205,7 +205,7 @@ void BoardTests::TestQuadEncoderLogic() {
       case 3:
         // B high
         name = config_->get_as<string>("quad_logic_b_name").value_or("NA");
-        tc.name = name + ":High";
+        tc.name = name + "High";
         digital_outputs_[kDIOQuadBHiLow]->Set(1);
         this_thread::sleep_for(talon_wait_);
         tc.actual =
@@ -215,7 +215,7 @@ void BoardTests::TestQuadEncoderLogic() {
       case 4:
         // I low
         name = config_->get_as<string>("quad_logic_i_name").value_or("NA");
-        tc.name = name + ":Low";
+        tc.name = name + "Low";
         digital_outputs_[kDIOQuadIHiLow]->Set(0);
         this_thread::sleep_for(talon_wait_);
         tc.actual =
@@ -226,7 +226,7 @@ void BoardTests::TestQuadEncoderLogic() {
       case 5:
         // I high
         name = config_->get_as<string>("quad_logic_i_name").value_or("NA");
-        tc.name = name + ":High";
+        tc.name = name + "High";
         digital_outputs_[kDIOQuadIHiLow]->Set(1);
         this_thread::sleep_for(talon_wait_);
         tc.actual =
@@ -246,7 +246,7 @@ void BoardTests::TestLimitSwitches() {
   TestCase tc;
   tc.epsilon = 0.0;
   auto name = config_->get_as<string>("limit_name").value_or("NA");
-  tc.name = name + ":Fwd:Open";
+  tc.name = name + "FwdOpen";
   tc.expected = 0.0;
   digital_outputs_[kDIOLimitFwd]->Set(0);
   this_thread::sleep_for(talon_wait_);
@@ -258,7 +258,7 @@ void BoardTests::TestLimitSwitches() {
     tester_->Fail(tc);
   }
 
-  tc.name = name + ":Fwd:Closed";
+  tc.name = name + "FwdClosed";
   tc.expected = 1.0;
   digital_outputs_[kDIOLimitFwd]->Set(1);
   this_thread::sleep_for(talon_wait_);
@@ -274,7 +274,7 @@ void BoardTests::TestLimitSwitches() {
   auto i3 = config_->get_as<double>("limit_3v_current").value_or(0.0);
   TestCurrent(tc.name, i5, i3);
 
-  tc.name = name + ":Rev:Open";
+  tc.name = name + "RevOpen";
   tc.expected = 0.0;
   digital_outputs_[kDIOLimitRev]->Set(0);
   this_thread::sleep_for(talon_wait_);
@@ -286,7 +286,7 @@ void BoardTests::TestLimitSwitches() {
     tester_->Fail(tc);
   }
 
-  tc.name = name + ":Rev:Closed";
+  tc.name = name + "RevClosed";
   tc.expected = 1.0;
   digital_outputs_[kDIOLimitRev]->Set(1);
   this_thread::sleep_for(talon_wait_);
@@ -297,6 +297,8 @@ void BoardTests::TestLimitSwitches() {
   } else {
     tester_->Fail(tc);
   }
+
+  TestCurrent(tc.name, i5, i3);
 }
 
 void BoardTests::TestQuadEncoderCount() {
