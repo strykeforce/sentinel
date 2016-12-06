@@ -39,8 +39,7 @@ void Test::LogResults(const TestCase& tc) {
 
 void Test::Pass(const TestCase& tc) {
   cout << tc.name << ": PASSED" << endl;
-  json tr;
-  tr["passed"] = true;
+  j_["results"][tc.name]["passed"] = true;
   LogResults(tc);
 }
 
@@ -49,7 +48,6 @@ void Test::Fail(const TestCase& tc) {
        << ", expected = " << tc.expected << ", epsilon = " << tc.epsilon
        << endl;
   success_ = false;
-  json tr;
-  tr["passed"] = false;
+  j_["results"][tc.name]["passed"] = false;
   LogResults(tc);
 }
