@@ -7,7 +7,6 @@ talon_wait_duration = 50 # ms
 # UUT supply current draw
 5v_name = "5vCurrent"
 3v_name = "3vCurrent"
-current_epsilon = 0.2
 
 # UUT analog encoder input
 analog_low_name = "AnalogEncoderInputLow"
@@ -20,7 +19,7 @@ analog_med_high_name = "AnalogEncoderInputMedHigh"
 analog_med_high = 604
 
 analog_high_name = "AnalogEncoderInputHigh"
-analog_high = 828
+analog_high = 838
 
 analog_epsilon = 5
 
@@ -33,18 +32,22 @@ quad_logic_a_name = "QuadEncoderLogicA"
 quad_logic_b_name = "QuadEncoderLogicB"
 quad_logic_i_name = "QuadEncoderLogicI"
 
-quad_5v_current = 1.35
-quad_3v_current = 2.55
+quad_5v_current = 1.826
+quad_5v_epsilon = 0.024
+quad_3v_current = 2.801
+quad_3v_epsilon = 0.091
 
 # UUT quad encoder counts
 quad_count_name = "QuadEncoderCount"
 quad_count_run_voltage = 12.0
-quad_count_epsilon = 20
+quad_count_epsilon = 25
 
 # UUT limit switches
 limit_name = "LimitSwitch"
-limit_5v_current = 1.35
-limit_3v_current = 2.55
+limit_5v_current = 1.336
+limit_5v_epsilon = 0.022
+limit_3v_current = 2.934
+limit_3v_epsilon = 0.092
 
 [[SENTINEL.TALON]]
 name = "both"

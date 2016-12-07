@@ -67,6 +67,15 @@ void BoardTests::Setup() {
   for (const auto& d : digital_outputs_) {
     d->Set(0);
   }
+
+  // disconnect quad encoder
+  digital_outputs_[kDIOQuadAEnable]->Set(1);
+  digital_outputs_[kDIOQuadBEnable]->Set(1);
+  digital_outputs_[kDIOQuadIEnable]->Set(1);
+  // turn off all leds
+  digital_outputs_[kDIOQuadAHiLow]->Set(1);
+  digital_outputs_[kDIOQuadBHiLow]->Set(1);
+  digital_outputs_[kDIOQuadIHiLow]->Set(1);
 }
 
 // run all tests
@@ -82,13 +91,14 @@ void BoardTests::RunTests() {
 }
 
 // test UUT 5v and 3.3v supply currents
-void BoardTests::TestCurrent(string name, double i5, double i3) {
+void BoardTests::TestCurrent(string name, double i5, double i5e, double i3,
+                             double i3e) {
   TestCase tc;
   auto name_suffix = config_->get_as<string>("5v_name").value_or("NA");
   tc.name = name + name_suffix;
   tc.actual = static_cast<double>(current_5v_.GetVoltage());
   tc.expected = i5;
-  tc.epsilon = config_->get_as<double>("current_epsilon").value_or(0.0);
+  tc.epsilon = i5e;
 
   if (abs(tc.actual - tc.expected) <= tc.epsilon) {
     tester_->Pass(tc);
@@ -100,6 +110,7 @@ void BoardTests::TestCurrent(string name, double i5, double i3) {
   tc.name = name + name_suffix;
   tc.actual = static_cast<double>(current_3v_.GetVoltage());
   tc.expected = i3;
+  tc.epsilon = i3e;
 
   if (abs(tc.actual - tc.expected) <= tc.epsilon) {
     tester_->Pass(tc);
@@ -147,23 +158,13 @@ void BoardTests::TestAnalogEncoderInputLevel(string name, uint a1, uint a2,
   } else {
     tester_->Fail(tc);
   }
-
-  // auto i5 = config_->get_asx<double>("analog_5v_current").value_or(0.0);
-  // auto i3 = config_->get_as<double>("analog_3v_current").value_or(0.0);
-  // TestCurrent(tc.name, i5, i3);
 }
 
 void BoardTests::TestQuadEncoderLogic() {
-  digital_outputs_[kDIOQuadAEnable]->Set(1);
-  digital_outputs_[kDIOQuadBEnable]->Set(1);
-  digital_outputs_[kDIOQuadIEnable]->Set(1);
-  // turn off all leds
-  digital_outputs_[kDIOQuadAHiLow]->Set(1);
-  digital_outputs_[kDIOQuadBHiLow]->Set(1);
-  digital_outputs_[kDIOQuadIHiLow]->Set(1);
-
   auto i5 = config_->get_as<double>("quad_5v_current").value_or(0.0);
+  auto i5e = config_->get_as<double>("quad_5v_epsilon").value_or(0.0);
   auto i3 = config_->get_as<double>("quad_3v_current").value_or(0.0);
+  auto i3e = config_->get_as<double>("quad_3v_epsilon").value_or(0.0);
 
   for (uint i = 0; i < 6; i++) {
     TestCase tc;
@@ -179,7 +180,7 @@ void BoardTests::TestQuadEncoderLogic() {
         tc.actual =
             static_cast<double>(Sentinel::uut_talon->GetPinStateQuadA());
         tc.expected = 0.0;
-        TestCurrent(tc.name, i5, i3);
+        TestCurrent(tc.name, i5, i5e, i3, i3e);
         break;
       case 1:
         // A high
@@ -200,7 +201,7 @@ void BoardTests::TestQuadEncoderLogic() {
         tc.actual =
             static_cast<double>(Sentinel::uut_talon->GetPinStateQuadB());
         tc.expected = 0.0;
-        TestCurrent(tc.name, i5, i3);
+        TestCurrent(tc.name, i5, i5e, i3, i3e);
         break;
       case 3:
         // B high
@@ -221,7 +222,7 @@ void BoardTests::TestQuadEncoderLogic() {
         tc.actual =
             static_cast<double>(Sentinel::uut_talon->GetPinStateQuadIdx());
         tc.expected = 0.0;
-        TestCurrent(tc.name, i5, i3);
+        TestCurrent(tc.name, i5, i5e, i3, i3e);
         break;
       case 5:
         // I high
@@ -243,11 +244,18 @@ void BoardTests::TestQuadEncoderLogic() {
 }
 
 void BoardTests::TestLimitSwitches() {
+  auto i5 = config_->get_as<double>("limit_5v_current").value_or(0.0);
+  auto i5e = config_->get_as<double>("limit_5v_epsilon").value_or(0.0);
+  auto i3 = config_->get_as<double>("limit_3v_current").value_or(0.0);
+  auto i3e = config_->get_as<double>("limit_3v_epsilon").value_or(0.0);
+
   TestCase tc;
   tc.epsilon = 0.0;
   auto name = config_->get_as<string>("limit_name").value_or("NA");
   tc.name = name + "FwdOpen";
   tc.expected = 0.0;
+
+  // verify forward limit switch open
   digital_outputs_[kDIOLimitFwd]->Set(0);
   this_thread::sleep_for(talon_wait_);
   tc.actual =
@@ -260,6 +268,8 @@ void BoardTests::TestLimitSwitches() {
 
   tc.name = name + "FwdClosed";
   tc.expected = 1.0;
+
+  // close forward limit switch
   digital_outputs_[kDIOLimitFwd]->Set(1);
   this_thread::sleep_for(talon_wait_);
   tc.actual =
@@ -270,12 +280,15 @@ void BoardTests::TestLimitSwitches() {
     tester_->Fail(tc);
   }
 
-  auto i5 = config_->get_as<double>("limit_5v_current").value_or(0.0);
-  auto i3 = config_->get_as<double>("limit_3v_current").value_or(0.0);
-  TestCurrent(tc.name, i5, i3);
+  // test current with forward LED lit
+  TestCurrent(tc.name, i5, i5e, i3, i3e);
+
+  // open forward limit switch to turn off LED
+  digital_outputs_[kDIOLimitFwd]->Set(0);
 
   tc.name = name + "RevOpen";
   tc.expected = 0.0;
+  // verify reverse limit switch open
   digital_outputs_[kDIOLimitRev]->Set(0);
   this_thread::sleep_for(talon_wait_);
   tc.actual =
@@ -288,6 +301,7 @@ void BoardTests::TestLimitSwitches() {
 
   tc.name = name + "RevClosed";
   tc.expected = 1.0;
+  // close reverse limit switch
   digital_outputs_[kDIOLimitRev]->Set(1);
   this_thread::sleep_for(talon_wait_);
   tc.actual =
@@ -298,10 +312,16 @@ void BoardTests::TestLimitSwitches() {
     tester_->Fail(tc);
   }
 
-  TestCurrent(tc.name, i5, i3);
+  // test current with reverse LED lit
+  TestCurrent(tc.name, i5, i5e, i3, i3e);
 }
 
 void BoardTests::TestQuadEncoderCount() {
+  // connect quad encoder
+  digital_outputs_[kDIOQuadAEnable]->Set(0);
+  digital_outputs_[kDIOQuadBEnable]->Set(0);
+  digital_outputs_[kDIOQuadIEnable]->Set(0);
+
   TestCase tc;
   tc.name = "QuadEncoderCount";
   Sentinel::uut_talon->SetPosition(0.0);

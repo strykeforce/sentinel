@@ -1,7 +1,9 @@
 /build
 /.vagrant
 /.vault_pw
-/sentinel.json
+*.json
+*.csv
+data/.ipynb_checkpoints/
 
 # Created by https://www.gitignore.io/api/osx,c++,cmake
 

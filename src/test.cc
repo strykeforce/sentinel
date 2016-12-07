@@ -23,7 +23,7 @@ Test::Test() : out_("sentinel.json", ios_base::app | ios_base::out) {
 
 void Test::Log() {
   j_["passed"] = success_;
-  out_ << j_.dump(4) << endl;
+  out_ << j_.dump() << endl;
   if (success_) {
     cout << "Board PASSED\n\n" << endl;
     return;

@@ -18,7 +18,8 @@ class BoardTests {
 
   void ConfigTalon(::CANTalon* talon);
   void Setup();
-  void TestCurrent(std::string name, double i5, double i3);
+  void TestCurrent(std::string name, double i5, double i5e, double i3,
+                   double i3e);
   void TestAnalogEncoderInput();
   void TestAnalogEncoderInputLevel(std::string name, uint a1, uint a2,
                                    uint expected);
