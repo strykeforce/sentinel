@@ -1,3 +1,6 @@
 # Filter files for the `jq` JSON command-line tool
 
-https://stedolan.github.io/jq/
+To use, install:
+
+- <https://stedolan.github.io/jq/>
+- <https://www.npmjs.com/package/json2csv>
