@@ -25,10 +25,10 @@ void Test::Log() {
   j_["passed"] = success_;
   out_ << j_.dump() << endl;
   if (success_) {
-    cout << "Board PASSED\n\n" << endl;
+    cout << "Board \033[32mPASSED\033[0m\n\n" << endl;
     return;
   }
-  cout << "Board FAILED\n\n" << endl;
+  cout << "Board \033[1;31mFAILED\033[0m\a\n\n" << endl;
 }
 
 void Test::LogResults(const TestCase& tc) {
@@ -38,15 +38,16 @@ void Test::LogResults(const TestCase& tc) {
 }
 
 void Test::Pass(const TestCase& tc) {
-  cout << tc.name << ": PASSED" << endl;
+  cout << left << setw(30) << tc.name << ": \033[32mPASSED\033[0m" << endl;
   j_["results"][tc.name]["passed"] = true;
   LogResults(tc);
 }
 
 void Test::Fail(const TestCase& tc) {
-  cout << tc.name << ": FAILED, actual = " << tc.actual
-       << ", expected = " << tc.expected << ", epsilon = " << tc.epsilon
-       << endl;
+  cout << left << setw(30) << tc.name
+       << ": \033[1;31mFAILED\033[0m, actual = " << tc.actual
+       << ", expected = " << tc.expected
+       << ", delta = " << abs(tc.expected - tc.actual) << endl;
   success_ = false;
   j_["results"][tc.name]["passed"] = false;
   LogResults(tc);
