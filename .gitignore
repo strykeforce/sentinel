@@ -4,6 +4,7 @@
 *.json
 *.csv
 data/.ipynb_checkpoints/
+/.clang_complete
 
 # Created by https://www.gitignore.io/api/osx,c++,cmake
 
